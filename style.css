@@ -1,0 +1,827 @@
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+/* Idagdag mo ito para maging totoong full screen ang pundasyon ng site */
+html, body {
+  width: 100%;
+ max-width: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden; /* Pinipigilan ang nakakairitang pag-usog pakaliwa/pakanan */
+}
+
+/* Siguraduhin din natin na ang bawat pangunahing section (tulad ng Hero/Home) ay laging sakop ang buong screen */
+section {
+  width: 100%;
+  min-height: 100vh; /* Sinasakop ang 100% ng taas ng screen ng user */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+} 
+	
+	section {
+  width: 100%;
+  min-height: 100vh; /* Sasakupin ang buong view ng screen ng pabaligtad */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  padding: 100px 5% 60px 5%; /* Nagbibigay ng allowance sa taas para sa navbar at sa baba para sa spacing */
+}
+	
+
+    /* 3D CANVAS BACKGROUND */
+    #strawberryCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* STRAWBERRY FALL EFFECT (Foreground) */
+    .strawberry-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .strawberry {
+      position: absolute;
+      top: -60px;
+      animation-name: strawberryFall;
+      animation-timing-function: linear;
+      animation-fill-mode: forwards;
+      user-select: none;
+    }
+
+    @keyframes strawberryFall {
+      0% {
+        transform: translateY(-10vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0.9;
+      }
+    }
+
+    /* ENHANCED GLASS NAVIGATION BAR */
+    nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 1200px;
+      padding: 12px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 50px;
+      z-index: 1000;
+      box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      transition: all 0.4s ease;
+    }
+
+    nav:hover {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 15px 35px rgba(233, 30, 99, 0.15);
+    }
+
+    nav h2 {
+      color: #e91e63;
+      font-family: 'Great Vibes', cursive;
+      font-size: 34px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    nav h2 span {
+      display: inline-block;
+      animation: float🍓 3s ease-in-out infinite;
+    }
+
+    @keyframes float🍓 {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(10deg); }
+    }
+
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      align-items: center;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #65565a;
+      font-weight: 500;
+      font-size: 15px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #e91e63;
+      background: rgba(233, 30, 99, 0.08);
+    }
+
+    /* GENERAL SECTION SETTINGS */
+    section {
+      position: relative;
+      min-height: 100vh;
+      padding: 140px 8% 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 72px;
+      color: white;
+      text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.3);
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 56px;
+      color: #e91e63;
+      margin-bottom: 15px;
+      letter-spacing: 1px;
+    }
+
+    p {
+      max-width: 750px;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #555;
+    }
+
+    /* HOME SECTION */
+    #home {
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    #home::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.45) 100%);
+      z-index: 1;
+    }
+
+    .home-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      animation: fadeSlide 30s infinite;
+    }
+
+    .home-slide:nth-child(1) { background-image: url("Elimain.jpg"); animation-delay: 0s; }
+    .home-slide:nth-child(2) { background-image: url("Elimain2.jpg"); animation-delay: 6s; }
+    .home-slide:nth-child(3) { background-image: url("Elimain3.jpg"); animation-delay: 12s; }
+    .home-slide:nth-child(4) { background-image: url("Elimain4.jpg"); animation-delay: 18s; }
+    .home-slide:nth-child(5) { background-image: url("Elimain5.jpg"); animation-delay: 24s; }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: scale(1); }
+      8% { opacity: 1; }
+      20% { opacity: 1; transform: scale(1.03); }
+      28% { opacity: 0; transform: scale(1.05); }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
+
+    .hero-content { 
+      position: relative; 
+      z-index: 2; 
+      color: white; 
+      animation: fadeUp 1.5s ease; 
+      font-family: 'Great Vibes', cursive;
+      text-shadow: 3px 4px 12px rgba(0,0,0,0.4);
+      letter-spacing: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 35px;
+      margin-top: 60px;
+    }
+
+    .hero-content p {
+      color: #fff;
+      font-size: 70px;
+      margin-bottom: 10px;
+    }
+
+    /* COUNTDOWN */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .time-box {
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+
+    .time-box:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .time-box span {
+      font-size: 36px;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .time-box small {
+      font-size: 13px;
+      letter-spacing: 1px;
+      margin-top: 2px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* SECTION CARD STYLES */
+    #details, #gallery, #dresscode, #giftguide {
+      position: relative;
+      overflow: hidden;
+      margin: 40px auto;
+      width: 92%;
+      max-width: 1300px;
+      background: rgba(255, 255, 255, 0.75) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 3px solid #ffb6c1;
+      border-radius: 40px;
+      box-shadow: 0 15px 45px rgba(233, 30, 99, 0.08);
+    }
+
+    /* CONTAINER HEADER BAR */
+    #details::before, #gallery::before, #dresscode::before, #giftguide::before {
+      content: "🍓 🍰 Elianna turns ONE 🍰 🍓";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 2px;
+      font-size: 14px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #ff80ab, #ec407a);
+      color: white;
+      z-index: 1;
+    }
+
+    .details-wrapper, .dress-wrapper, .gift-wrapper, .gallery-grid, #gallery h2, #gallery p {
+      position: relative;
+      z-index: 2;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .event-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px dashed #ffb6c1;
+      border-radius: 25px;
+      padding: 40px 20px;
+      box-shadow: 0 10px 25px rgba(216, 92, 124, 0.05);
+      transition: .3s;
+    }
+
+    .event-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(216, 92, 124, 0.12);
+    }
+
+    .event-icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+    }
+
+    .event-card h3 {
+      color: #d85c7c;
+      margin-bottom: 15px;
+      font-size: 1.6rem;
+    }
+
+    .event-info {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 25px;
+    }
+
+    .event-info span {
+      background: #fff0f4;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-size: .95rem;
+      font-weight: 500;
+      color: #d85c7c;
+    }
+
+    .venue-link {
+      color: #d85c7c;
+      text-decoration: none;
+      font-weight: 600;
+      background: rgba(216, 92, 124, 0.08);
+      padding: 10px 24px;
+      border-radius: 30px;
+      transition: 0.3s;
+    }
+
+    .venue-link:hover {
+      background: #d85c7c;
+      color: white;
+    }
+
+    /* GALLERY */
+    .gallery-grid {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+ /* CONTAINER PARA SA EPSASYO NG LARAWAN (Opsyonal pero mas maganda kung may wrapper ang bawat img) */
+.gallery-grid img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  
+  /* PERFECT POLAROID FRAME */
+  background-color: white; /* Inayos ang typo mula sa #white */
+  padding: 12px 12px 35px 12px; /* Mas pinakapal ang ilalim para sa totoong polaroid space */
+  border-radius: 4px; /* Mas natural na kanto ng totoong papel/larawan */
+  
+  /* TRIPLE LAYER SHADOW (Para sa makatotohanang 3D depth) */
+  box-shadow: 
+    0 1px 3px rgba(0,0,0,0.1),
+    0 10px 20px rgba(233, 30, 99, 0.05),
+    inset 0 0 20px rgba(0,0,0,0.02);
+  
+  /* ELEGANTENG LIGHT PINK BORDER */
+  border: 1px solid rgba(255, 182, 193, 0.6);
+  
+  /* Bouncy at Swabeng transition */
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+}
+
+/* EPEKTO KAPAG ITINUTOK ANG MOUSE (HOVER) */
+.gallery-grid img:hover {
+  transform: translateY(-10px) scale(1.04) rotate(-1.5deg); /* Umaangat at bahagyang tumatagay */
+  background-color: #fff6f8; /* Nagiging soft pink-white ang frame */
+  border-color: #e91e63; /* Nagiging matingkad na pink ang pinaka-gilid */
+  
+  /* Mas lumalalim ang anino dahil sa pag-angat ng papel */
+  box-shadow: 
+    0 20px 38px rgba(233, 30, 99, 0.15), 
+    0 15px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  z-index: 10; /* Sinisigurong lulutang ito sa ibabaw ng ibang katabing picture */
+}
+
+    /* RSVP */
+    /* RSVP SECTION */
+#rsvp {
+  background: linear-gradient(135deg, #ff80ab 0%, #f50057 50%, #e91e63 100%);
+  color: white;
+  min-height: 70vh;
+  
+  /* ITONG MGA SUMUSUNOD ANG MAGPAPAGITNA SA KANYA */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Pinapagitna patayo (Vertically centered) */
+  align-items: center;     /* Pinapagitna pahiga (Horizontally centered) */
+  text-align: center;      /* Sinisiguradong gitna pati ang mga text */
+  padding: 60px 20px;      /* Allowance para sa mobile screen */
+}
+
+    #rsvp h2, #rsvp p { 
+  color: white; 
+}
+
+#rsvp p { 
+  margin-bottom: 40px; 
+  font-size: 18px; 
+  max-width: 600px;        /* Pinipigilan nitong humaba nang husto ang text sa desktop */
+}
+
+.rsvp-btn {
+  background: white;
+  color: #e91e63;
+  padding: 18px 50px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 700;
+  transition: 0.3s;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: inline-block;   /* Sinisiguradong gumagana ang tamang sukat ng padding ng button */
+}
+
+.rsvp-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+}
+
+    /* DRESS CODE */
+    .dress-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 35px;
+      margin-top: 40px;
+      width: 100%;
+    }
+
+    .dress-box {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 30px;
+      padding: 45px 30px;
+      box-shadow: 0 10px 30px rgba(233, 30, 99, 0.05);
+      transition: 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      border: 2px dashed #ffb6c1;
+    }
+
+    .dress-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(233, 30, 99, 0.12);
+    }
+
+    .dress-icon {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      margin: 0 auto 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      background: linear-gradient(135deg, #ff80ab, #f50057);
+      color: white;
+      box-shadow: 0 8px 25px rgba(245, 0, 87, 0.2);
+    }
+
+    .dress-box h3 {
+      color: #e91e63;
+      font-size: 32px;
+      margin-bottom: 18px;
+      font-family: 'Great Vibes', cursive;
+    }
+
+    /* GIFT GUIDE */
+    .gift-subtitle {
+      max-width: 650px;
+      margin: 0 auto 30px;
+      color: #666;
+      line-height: 1.8;
+      font-size: 18px;
+    }
+
+    .gift-wrapper .gift-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .gift-box {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      transition: 0.4s ease;
+      border: 2px dashed #ffb6c1;
+      position: relative;
+    }
+
+    .gift-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(233, 30, 99, 0.12);
+    }
+
+    .gift-image {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+      transition: 0.4s ease;
+    }
+
+    .gift-box h3 {
+      color: #e91e63;
+      margin: 22px 20px 12px;
+      font-family: 'Great Vibes', cursive;
+      font-size: 28px;
+    }
+
+    .gift-box p {
+      color: #666;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 0 20px 28px;
+    }
+
+    /* CORNERS */
+    .corner-left, .corner-right {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      z-index: 1;
+      background: repeating-linear-gradient(45deg, #ffd6e5 0 15px, #ffe8f0 15px 30px);
+      opacity: .4;
+    }
+    .corner-left { bottom: 0; left: 0; border-top-right-radius: 100%; }
+    .corner-right { bottom: 0; right: 0; border-top-left-radius: 100%; }
+
+    /* FOOTER */
+    footer {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      padding: 50px 20px;
+      background: linear-gradient(135deg, #ff80ab, #f06292, #ec407a);
+      color: white;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav {
+        top: 10px;
+        padding: 10px 20px;
+        border-radius: 25px;
+      }
+
+      nav h2 { font-size: 26px; }
+
+      nav ul { gap: 8px; }
+
+      nav ul li a {
+        font-size: 12px;
+        padding: 6px 10px;
+      }
+
+      h1 { font-size: 48px; }
+      h2 { font-size: 42px; }
+
+      .hero-content p { font-size: 44px; }
+
+      .details-grid { grid-template-columns: 1fr; }
+      
+      section { padding: 120px 4% 60px; }
+    }
+	
+	/* PRIVACY MODAL BACKDROP */
+.privacy-modal {
+  display: none; /* Nakatago muna by default */
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* Madilim na background sa likod */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 99999; /* Pinakamataas para lutang na lutang */
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* THE MODAL BOX */
+.privacy-content {
+  background: white;
+  border: 3px dashed #ffb6c1;
+  border-radius: 30px;
+  max-width: 500px;
+  width: 100%;
+  padding: 35px 25px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(233, 30, 99, 0.2);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.privacy-content h3 {
+  font-family: 'Poppins', sans-serif;
+  color: #e91e63;
+  font-size: 22px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.privacy-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* BUTTONS LOOB NG MODAL */
+.modal-btn-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.modal-btn {
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.2s;
+}
+
+.btn-agree {
+  background: #e91e63;
+  color: white;
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.3);
+}
+
+.btn-agree:hover {
+  background: #c2185b;
+  transform: translateY(-2px);
+}
+
+.btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+
+/* SWIMMING NOTE BANNER */
+.swimming-note {
+  margin-top: 40px;
+  background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%); /* Soft Pool Blue Gradient */
+  border: 2px dashed #00bcd4; /* Cyan/Teal border */
+  border-radius: 20px;
+  padding: 20px 30px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 188, 212, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  animation: floatWave 4s ease-in-out infinite;
+}
+
+.swimming-note p {
+  color: #006064 !important; /* Deep Teal para madaling basahin */
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+.swimming-icon {
+  font-size: 35px;
+  animation: swimMove 3s ease-in-out infinite;
+}
+
+/* KUNTING GALAW PARA MASAKIT SA MATA PERO CUTE */
+@keyframes floatWave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes swimMove {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(4px) rotate(5deg); }
+}
+
+/* Pagsasaayos para sa Mobile Screen */
+@media (max-width: 768px) {
+  .swimming-note {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  .swimming-note p {
+    text-align: center;
+  }
+}
+
+/* CHURCH ETIQUETTE BANNER */
+.church-note {
+  margin-bottom: 25px;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); /* Soft Warm/Gold Ivory Gradient para sa simbahan */
+  border: 2px dashed #ffb74d; /* Soft Orange/Gold border */
+  border-radius: 20px;
+  padding: 20px 30px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(255, 183, 77, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.church-note p {
+  color: #e65100 !important; /* Deep Warm Brown/Orange para sa seryosong babala pero magandang tingnan */
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.6;
+  margin: 0;
+  text-align: left;
+}
+
+.church-icon {
+  font-size: 35px;
+}
+
+/* Pagsasaayos para sa Mobile Screen */
+@media (max-width: 768px) {
+  .church-note {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+  .church-note p {
+    text-align: center;
+  }
+}
+  </style>
